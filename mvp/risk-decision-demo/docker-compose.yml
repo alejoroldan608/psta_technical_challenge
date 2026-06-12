@@ -1,0 +1,10 @@
+services:
+  risk-decision-demo:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: risk-decision-demo
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: 3000
