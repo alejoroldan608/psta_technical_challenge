@@ -73,6 +73,49 @@ El MVP funcional se encuentra en:
 
 [ mvp/risk-decision-demo ](mvp/risk-decision-demo)
 
+## Cómo ejecutar el MVP funcional
+
+El MVP se encuentra en:
+
+mvp/risk-decision-demo
+
+Para ejecutarlo localmente:
+
+```bash
+cd mvp/risk-decision-demo
+npm install
+npm run dev
+```
+
+El servicio queda disponible en:
+
+```text
+http://localhost:3000
+```
+
+Endpoints principales:
+
+```http
+GET /health
+POST /risk/decision
+POST /risk/simulate/velocity-attack
+```
+
+Para correr las pruebas:
+
+```bash
+npm test
+```
+
+Para compilar:
+
+```bash
+npm run build
+```
+
+Este MVP es demostrativo. No busca resolver fraude real, sino mostrar cómo una parte de la arquitectura puede expresarse en código con separación de capas, reglas simples, reason codes y pruebas unitarias.
+
+
 Este MVP no representa una implementación completa de la PSTA. Su objetivo es mostrar, de manera simple y ejecutable, cómo se podrían expresar en código algunos conceptos centrales de la arquitectura:
 
 * Cálculo básico de score de riesgo.
