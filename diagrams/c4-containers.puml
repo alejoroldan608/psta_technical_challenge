@@ -1,0 +1,51 @@
+@startuml c4-containers
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title PSTA - Diagrama de Contenedores
+
+Person(cliente, "Cliente", "Realiza operaciones desde web o móvil")
+Person(analista, "Analista de fraude", "Revisa alertas y casos sospechosos")
+
+System_Ext(canales, "Canales digitales", "Web, móvil y B2B")
+System_Ext(core, "Core transaccional", "Ejecuta las operaciones financieras")
+System_Ext(factores, "Proveedores de autenticación", "Clave Dinámica, push, biometría, OTP")
+
+System_Boundary(psta, "PSTA") {
+    Container(api, "API Gateway", "Gateway / WAF", "Punto de entrada, seguridad, rate limiting y trazabilidad")
+
+    Container(txSecurity, "Transaction Security Service", "TypeScript / NestJS", "Coordina la decisión de seguridad de la transacción")
+    Container(riskDecision, "Risk Decision Service", "TypeScript / NestJS", "Calcula score de riesgo y reason codes")
+    Container(authPolicy, "Authentication Policy Service", "TypeScript / NestJS", "Traduce riesgo en acción de autenticación")
+    Container(factor, "Factor Orchestrator", "TypeScript / NestJS", "Ejecuta el factor requerido o aplica fallback")
+    Container(streaming, "Streaming Risk Processor", "Stream Processing", "Detecta patrones como fraude por velocidad")
+    Container(fraud, "Fraud Response Service", "TypeScript / NestJS", "Bloquea cuentas, retiene operaciones o genera casos")
+    Container(audit, "Audit Service", "TypeScript / NestJS", "Guarda trazabilidad de decisiones")
+
+    ContainerDb(cache, "Redis", "Cache", "Señales recientes, sesión y consultas de baja latencia")
+    ContainerDb(db, "PostgreSQL", "Base de datos", "Estado operacional y configuraciones")
+    ContainerQueue(broker, "Kafka", "Broker de eventos", "Eventos de riesgo, autenticación, auditoría y fraude")
+}
+
+Rel(cliente, canales, "Solicita operación")
+Rel(canales, api, "Envía solicitud")
+Rel(api, txSecurity, "Valida y enruta")
+
+Rel(txSecurity, riskDecision, "Solicita evaluación de riesgo")
+Rel(riskDecision, cache, "Consulta señales recientes")
+Rel(riskDecision, db, "Consulta configuración y reglas")
+Rel(txSecurity, authPolicy, "Solicita acción según riesgo")
+Rel(authPolicy, factor, "Indica factor requerido")
+Rel(factor, factores, "Ejecuta autenticación")
+Rel(txSecurity, core, "Autoriza, retiene o bloquea")
+
+Rel(txSecurity, broker, "Publica eventos")
+Rel(riskDecision, broker, "Publica score")
+Rel(factor, broker, "Publica resultado de autenticación")
+Rel(broker, streaming, "Consume eventos")
+Rel(streaming, fraud, "Notifica patrón crítico")
+Rel(fraud, broker, "Publica cuenta bloqueada")
+Rel(audit, broker, "Consume eventos para auditoría")
+
+Rel(analista, fraud, "Consulta casos y bloqueos")
+
+@enduml

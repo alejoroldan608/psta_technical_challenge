@@ -1,0 +1,35 @@
+@startuml components-auth-domain
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title PSTA - Componentes del dominio de autenticación
+
+Container_Boundary(auth, "Authentication / Policy Services") {
+    Component(policyApi, "Policy API Controller", "REST", "Recibe nivel de riesgo y contexto")
+    Component(policyUseCase, "Evaluate Auth Policy Use Case", "Application", "Define la acción requerida")
+    Component(matrix, "Risk-Factor Matrix", "Domain", "Mapea riesgo contra factor")
+    Component(fallback, "Fallback Evaluator", "Domain", "Selecciona factor alterno si aplica")
+    
+    Component(factorApi, "Factor API Controller", "REST", "Recibe solicitud de autenticación")
+    Component(orchestrator, "Factor Orchestrator", "Application", "Coordina el reto de autenticación")
+    Component(providerAdapter, "Provider Adapter", "Infrastructure", "Integra Clave Dinámica, push, biometría u OTP")
+    Component(eventPublisher, "Auth Event Publisher", "Infrastructure", "Publica resultado de autenticación")
+}
+
+ContainerDb(db, "PostgreSQL", "DB", "Políticas, configuración y estados")
+ContainerDb(cache, "Redis", "Cache", "Disponibilidad de factores y sesión")
+ContainerQueue(broker, "Kafka", "Broker", "Eventos de autenticación y auditoría")
+System_Ext(providers, "Proveedores de autenticación", "Clave Dinámica, push, biometría, OTP")
+
+Rel(policyApi, policyUseCase, "Evalúa política")
+Rel(policyUseCase, matrix, "Consulta matriz")
+Rel(policyUseCase, fallback, "Evalúa fallback")
+Rel(policyUseCase, db, "Consulta configuración")
+
+Rel(factorApi, orchestrator, "Ejecuta reto")
+Rel(orchestrator, providerAdapter, "Solicita factor")
+Rel(orchestrator, cache, "Consulta disponibilidad")
+Rel(providerAdapter, providers, "Invoca proveedor")
+Rel(orchestrator, eventPublisher, "Reporta resultado")
+Rel(eventPublisher, broker, "Publica evento")
+
+@enduml

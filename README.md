@@ -47,6 +47,13 @@ El diseño propone que ambos dominios mantengan responsabilidades separadas, per
 
 Los diagramas se mantienen en formato **PlantUML** para que puedan versionarse como código y evolucionar junto con la documentación.
 
+## Diagramas exportados
+
+Los archivos fuente de los diagramas están en `diagrams/` en formato PlantUML. Instalar extension en vsc PlantUML.
+
+Las imágenes exportadas en PNG se ubican en `assets/diagrams/` para facilitar la revisión desde GitHub.
+
+
 | Diagrama                                       | Archivo fuente                                                                             |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------ |
 | C4 - Contexto                                  | [diagrams/c4-context.puml](diagrams/c4-context.puml)                                       |
@@ -136,5 +143,10 @@ Las decisiones arquitectónicas más relevantes de la propuesta son:
 
 Esta entrega no pretende construir una solución productiva completa ni reemplazar el conocimiento especializado de fraude financiero. Las reglas, umbrales y señales de riesgo propuestas deben ser validadas con expertos del dominio de fraude, riesgo y cumplimiento.
 
+## Foco de la entrga del reot
 
-
+1. Problema: autenticación y riesgo no conversaban.
+2. Solución: PSTA conecta ambos dominios.
+3. Arquitectura: servicios principales y eventos.
+4. Escenarios críticos: bajo riesgo, fraude por velocidad y caída de Clave Dinámica.
+5. Operación: resiliencia, observabilidad y equipo.

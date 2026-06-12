@@ -1,0 +1,29 @@
+@startuml components-risk-domain
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Component.puml
+
+title PSTA - Componentes del dominio de riesgo
+
+Container_Boundary(risk, "Risk Decision Service") {
+    Component(controller, "Risk API Controller", "REST", "Recibe solicitudes de evaluación de riesgo")
+    Component(usecase, "Evaluate Risk Use Case", "Application", "Coordina el cálculo del score")
+    Component(engine, "Risk Scoring Engine", "Domain", "Calcula score y nivel de riesgo")
+    Component(rules, "Rules Evaluator", "Domain", "Evalúa reglas configurables")
+    Component(reasons, "Reason Code Builder", "Domain", "Explica los motivos del riesgo")
+    Component(publisher, "Risk Event Publisher", "Infrastructure", "Publica eventos de riesgo")
+}
+
+ContainerDb(cache, "Redis", "Cache", "Señales recientes y contadores de ventana")
+ContainerDb(db, "PostgreSQL", "DB", "Reglas, umbrales y configuración")
+ContainerQueue(broker, "Kafka", "Broker", "Eventos para auditoría y correlación")
+
+Rel(controller, usecase, "Solicita evaluación")
+Rel(usecase, engine, "Calcula score")
+Rel(usecase, rules, "Evalúa reglas")
+Rel(usecase, reasons, "Construye reason codes")
+Rel(usecase, publisher, "Publica resultado")
+
+Rel(engine, cache, "Consulta señales recientes")
+Rel(rules, db, "Consulta reglas versionadas")
+Rel(publisher, broker, "Publica riesgo calculado")
+
+@enduml

@@ -1,0 +1,50 @@
+@startuml sequence-dynamic-key-outage
+
+title PSTA - Secuencia: caída de Clave Dinámica
+
+actor Cliente
+participant "Canal digital" as Canal
+participant "API Gateway" as Gateway
+participant "Transaction Security Service" as Tx
+participant "Risk Decision Service" as Risk
+participant "Authentication Policy Service" as Policy
+participant "Factor Orchestrator" as Factor
+participant "Clave Dinámica" as DynamicKey
+participant "Factor alterno" as Fallback
+participant "Audit Service" as Audit
+participant "Core transaccional" as Core
+
+Cliente -> Canal: Solicita transacción
+Canal -> Gateway: Envía solicitud
+Gateway -> Tx: Solicita evaluación
+
+Tx -> Risk: Evaluar riesgo
+Risk --> Tx: Riesgo medio
+
+Tx -> Policy: Consultar acción
+Policy --> Tx: Requiere factor fuerte
+
+Tx -> Factor: Ejecutar factor requerido
+Factor -> DynamicKey: Solicitar validación
+
+DynamicKey --> Factor: Timeout / error
+Factor -> Factor: Abre circuito
+
+Factor -> Fallback: Solicitar factor alterno
+Fallback --> Factor: Validación exitosa
+
+Factor --> Tx: Autenticación aprobada con fallback
+Tx -> Core: Autorizar operación
+Core --> Tx: Transacción ejecutada
+
+Tx -> Audit: Registrar fallback, riesgo y resultado
+Tx --> Gateway: Respuesta aprobada
+Gateway --> Canal: Transacción exitosa
+Canal --> Cliente: Confirmación
+
+note right of Factor
+Si el riesgo fuera alto o crítico,
+no se aprobaría con factor degradado.
+end note
+
+@enduml

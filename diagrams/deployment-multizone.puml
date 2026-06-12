@@ -1,0 +1,111 @@
+@startuml deployment-multizone
+
+title PSTA - Despliegue físico multi-zona
+
+node "Usuarios / Canales" {
+  [Web]
+  [Móvil]
+  [B2B]
+}
+
+cloud "Entrada pública" {
+  [WAF]
+  [Balanceador global]
+  [API Gateway]
+}
+
+node "Zona A - Kubernetes" {
+  [Transaction Security Service A]
+  [Risk Decision Service A]
+  [Authentication Policy Service A]
+  [Factor Orchestrator A]
+  [Fraud Response Service A]
+  [Audit Service A]
+}
+
+node "Zona B - Kubernetes" {
+  [Transaction Security Service B]
+  [Risk Decision Service B]
+  [Authentication Policy Service B]
+  [Factor Orchestrator B]
+  [Fraud Response Service B]
+  [Audit Service B]
+}
+
+database "PostgreSQL Multi-zona" as DB
+queue "Kafka / Broker de eventos" as Kafka
+database "Redis Cluster" as Redis
+
+cloud "Servicios externos" {
+  [Clave Dinámica]
+  [Push / Biometría / OTP]
+  [Core transaccional]
+}
+
+cloud "Observabilidad" {
+  [Métricas]
+  [Logs]
+  [Trazas]
+  [Alertas]
+}
+
+[Web] --> [WAF]
+[Móvil] --> [WAF]
+[B2B] --> [WAF]
+
+[WAF] --> [Balanceador global]
+[Balanceador global] --> [API Gateway]
+
+[API Gateway] --> [Transaction Security Service A]
+[API Gateway] --> [Transaction Security Service B]
+
+[Transaction Security Service A] --> [Risk Decision Service A]
+[Transaction Security Service A] --> [Authentication Policy Service A]
+[Transaction Security Service A] --> [Core transaccional]
+
+[Transaction Security Service B] --> [Risk Decision Service B]
+[Transaction Security Service B] --> [Authentication Policy Service B]
+[Transaction Security Service B] --> [Core transaccional]
+
+[Authentication Policy Service A] --> [Factor Orchestrator A]
+[Authentication Policy Service B] --> [Factor Orchestrator B]
+
+[Factor Orchestrator A] --> [Clave Dinámica]
+[Factor Orchestrator A] --> [Push / Biometría / OTP]
+[Factor Orchestrator B] --> [Clave Dinámica]
+[Factor Orchestrator B] --> [Push / Biometría / OTP]
+
+[Risk Decision Service A] --> Redis
+[Risk Decision Service B] --> Redis
+
+[Risk Decision Service A] --> DB
+[Risk Decision Service B] --> DB
+
+[Transaction Security Service A] --> Kafka
+[Transaction Security Service B] --> Kafka
+[Fraud Response Service A] --> Kafka
+[Fraud Response Service B] --> Kafka
+[Audit Service A] --> Kafka
+[Audit Service B] --> Kafka
+
+[Transaction Security Service A] --> [Métricas]
+[Risk Decision Service A] --> [Logs]
+[Factor Orchestrator A] --> [Trazas]
+[Fraud Response Service A] --> [Alertas]
+
+[Transaction Security Service B] --> [Métricas]
+[Risk Decision Service B] --> [Logs]
+[Factor Orchestrator B] --> [Trazas]
+[Fraud Response Service B] --> [Alertas]
+
+note bottom of [Balanceador global]
+Si una zona falla, el tráfico
+se enruta hacia la zona disponible.
+end note
+
+note bottom of [Factor Orchestrator A]
+Si Clave Dinámica cae,
+se usa fallback según riesgo.
+end note
+
+@enduml

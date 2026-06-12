@@ -1,0 +1,49 @@
+@startuml sequence-velocity-attack
+
+title PSTA - Secuencia: ataque de velocidad
+
+actor Cliente
+participant "Canal digital" as Canal
+participant "API Gateway" as Gateway
+participant "Transaction Security Service" as Tx
+participant "Risk Decision Service" as Risk
+participant "Kafka" as Broker
+participant "Streaming Risk Processor" as Streaming
+participant "Fraud Response Service" as Fraud
+participant "Audit Service" as Audit
+participant "Core transaccional" as Core
+
+Cliente -> Canal: Solicita transferencia
+Canal -> Gateway: Envía solicitud
+Gateway -> Tx: Evaluar operación
+
+Tx -> Risk: Evaluar riesgo actual
+Risk --> Tx: Riesgo medio / alto
+
+Tx -> Broker: Publica evento de transacción
+Broker -> Streaming: Consume evento
+
+Streaming -> Streaming: Correlaciona cuenta, monto, destino y ventana de tiempo
+
+alt patrón aún no crítico
+    Tx -> Core: Ejecutar o retener según política
+    Core --> Tx: Resultado
+else patrón crítico detectado
+    Streaming -> Fraud: Notificar ataque de velocidad
+    Fraud -> Fraud: Bloquear cuenta temporalmente
+    Fraud -> Broker: Publicar cuenta bloqueada
+    Fraud -> Audit: Registrar bloqueo y señales
+    Tx -> Fraud: Consultar estado de cuenta
+    Fraud --> Tx: Cuenta bloqueada
+    Tx --> Gateway: Rechazar operación
+    Gateway --> Canal: Operación no permitida
+    Canal --> Cliente: Mensaje controlado
+end
+
+note right of Streaming
+El patrón se detecta por varias transferencias
+pequeñas, montos similares y destinos nuevos
+en una ventana corta.
+end note
+
+@enduml

@@ -1,0 +1,25 @@
+@startuml c4-context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title PSTA - Diagrama de Contexto
+
+Person(cliente, "Cliente", "Usuario que realiza operaciones desde web o móvil")
+Person(analista, "Analista de fraude", "Equipo que revisa alertas, bloqueos y casos sospechosos")
+
+System(psta, "PSTA", "Plataforma de Seguridad Transaccional Adaptativa")
+
+System_Ext(canales, "Canales digitales", "Web, móvil y B2B")
+System_Ext(core, "Core transaccional", "Sistema que ejecuta las operaciones financieras")
+System_Ext(factores, "Proveedores de autenticación", "Clave Dinámica, push, biometría, OTP")
+System_Ext(monitoreo, "Herramientas de observabilidad", "Métricas, logs, trazas y alertas")
+System_Ext(cumplimiento, "Auditoría y cumplimiento", "Consulta de trazabilidad y evidencia")
+
+Rel(cliente, canales, "Inicia sesión y solicita transacciones")
+Rel(canales, psta, "Solicita evaluación de seguridad")
+Rel(psta, core, "Autoriza, retiene o bloquea operaciones")
+Rel(psta, factores, "Solicita factores de autenticación")
+Rel(psta, monitoreo, "Publica métricas, logs y trazas")
+Rel(psta, cumplimiento, "Entrega evidencia auditable")
+Rel(analista, psta, "Consulta casos, bloqueos y señales de riesgo")
+
+@enduml

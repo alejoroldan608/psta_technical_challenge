@@ -1,0 +1,38 @@
+@startuml sequence-low-risk-transaction
+
+title PSTA - Secuencia: transacción habitual de bajo riesgo
+
+actor Cliente
+participant "Canal digital" as Canal
+participant "API Gateway" as Gateway
+participant "Transaction Security Service" as Tx
+participant "Risk Decision Service" as Risk
+participant "Authentication Policy Service" as Policy
+participant "Audit Service" as Audit
+participant "Core transaccional" as Core
+
+Cliente -> Canal: Solicita transferencia habitual
+Canal -> Gateway: Envía solicitud
+Gateway -> Tx: Solicita evaluación de seguridad
+
+Tx -> Risk: Evaluar riesgo de la transacción
+Risk --> Tx: Riesgo bajo + motivos
+
+Tx -> Policy: Consultar acción según riesgo
+Policy --> Tx: Permitir / autenticación silenciosa
+
+Tx -> Core: Autorizar ejecución
+Core --> Tx: Transacción ejecutada
+
+Tx -> Audit: Registrar decisión y resultado
+Tx --> Gateway: Respuesta aprobada
+Gateway --> Canal: Transacción exitosa
+Canal --> Cliente: Confirmación
+
+note right of Audit
+Se registra score, señales usadas,
+política aplicada y resultado.
+No se guarda información sensible.
+end note
+
+@enduml
