@@ -8,8 +8,8 @@ export const RiskThresholds = {
   mediumAmountMax: 1_000_000,
 
   mediumRiskScore: 0.35,
-  highRiskScore: 0.65,
-  criticalRiskScore: 0.85,
+  highRiskScore: 0.75,
+  criticalRiskScore: 0.9,
 
   recentTransactionsWarning: 5
 } as const;
