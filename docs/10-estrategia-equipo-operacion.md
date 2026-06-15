@@ -1,17 +1,15 @@
 # 10. Estrategia de equipo y operación
 Equipo propuesto
 
-Para construir la PSTA no propondría un equipo gigante, sino un equipo pequeño con buen criterio y ownership claro.
+Para construir la PSTA no propondría un equipo gigante, sino un equipo pequeño con buen criterio y metas claras.
 
 Rol	Responsabilidad
-Líder técnico backend	Diseño, decisiones técnicas y coordinación de dominios.
-Backend engineers	Construcción de servicios y contratos.
-Engineer SRE/DevOps	CI/CD, infraestructura, monitoreo y operación.
-QA automation	Pruebas funcionales, contrato, carga y regresión.
-Security engineer	Revisión de autenticación, cifrado y permisos.
-Product/Business owner	Priorización y alineación con negocio.
-Experto de fraude/riesgo	Validación de reglas, señales y umbrales.
-Cómo evitar silos
+
+Ingenieros Software internos Banco enfocados en Backend - Diseño, decisiones técnicas y coordinación de dominios.
+Certificador y automatizador QA - Pruebas funcionales, contrato, carga y regresión.
+Capacidad de Devops y Devsecops - Ciclo de desarrollo de software
+PO	Priorización y alineación con negocio.
+Experto de fraudes	Validación de reglas, señales y umbrales.
 
 El problema original nace porque autenticación y riesgo no conversan. Por eso el equipo debe trabajar con objetivos compartidos, eventos comunes, decisiones documentadas y revisiones cruzadas.
 
@@ -26,10 +24,6 @@ Endurecer resiliencia, observabilidad y seguridad.
 Liberar en piloto controlado con métricas claras.
 Soporte
 
-Usaría guardias con escalamiento:
+Definir modelo de Standby.
 
-L1: monitoreo inicial y clasificación.
-L2: equipo PSTA.
-L3: especialistas de riesgo, autenticación, infraestructura o seguridad.
-
-Las decisiones importantes quedarían en ADRs, runbooks y postmortems. Un sistema crítico no puede depender de la memoria de una sola persona.
+Las decisiones importantes quedarían en runbooks. Un sistema crítico no puede depender de la memoria de una sola persona.
