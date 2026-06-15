@@ -61,6 +61,70 @@ Si el patrón se vuelve crítico, el sistema no invalida todo sin contexto: bloq
 
 **Resultado:** la seguridad se adapta al comportamiento dentro de la misma sesión.
 
+---
+
+## Cómo se dedujo cada flujo
+
+Los escenarios se dedujeron a partir de las señales explícitas del reto y del resultado esperado en cada caso. La arquitectura no responde cada escenario como una regla aislada, sino con un flujo común:
+
+1. evaluar riesgo,
+2. decidir la acción de autenticación,
+3. ejecutar el factor si aplica,
+4. publicar eventos,
+5. registrar auditoría,
+6. activar respuesta antifraude cuando el riesgo supera el umbral.
+
+### Escenario 1 — Transacción habitual de bajo riesgo
+
+**Señales del reto:** monto bajo, dispositivo habitual, horario normal y comportamiento consistente.
+
+**Decisión en la arquitectura:** el `Risk Decision Service` calcula riesgo bajo usando señales simples y de baja latencia. Luego la política permite autenticación silenciosa o confianza de sesión.
+
+**Garantía buscada:** mantener rápido el flujo más frecuente, sin factor visible para el cliente, pero dejando auditoría completa de la decisión.
+
+### Escenario 2 — Dispositivo desconocido y monto medio
+
+**Señales del reto:** dispositivo nuevo, ubicación inusual y transferencia de $800.000 COP.
+
+**Decisión en la arquitectura:** el score sube a riesgo medio. La política no bloquea automáticamente, pero exige un factor fuerte como push o biometría.
+
+**Garantía buscada:** proteger la operación sin castigar de entrada a un cliente legítimo. Si supera el factor fuerte, el dispositivo queda aprendido de forma gradual y auditable.
+
+### Escenario 3 — Ataque de velocidad
+
+**Señales del reto:** muchas transferencias pequeñas, montos similares y beneficiarios nuevos en una ventana corta.
+
+**Decisión en la arquitectura:** los eventos alimentan un `Streaming Risk Processor`. El riesgo escala de forma incremental hasta crítico cuando el patrón se repite.
+
+**Garantía buscada:** bloquear la cuenta antes de que el daño crezca y dejar trazabilidad completa de señales, ventana aplicada, decisión y evento de bloqueo.
+
+### Escenario 4 — Caída de Clave Dinámica
+
+**Señales del reto:** indisponibilidad del segundo factor durante horario pico y alto volumen de clientes afectados.
+
+**Decisión en la arquitectura:** el `Factor Orchestrator` detecta errores, timeouts o latencia anormal, abre circuito y aplica fallback según el nivel de riesgo.
+
+**Garantía buscada:** permitir continuidad en bajo y medio riesgo con el mejor factor disponible, pero rechazar o retener alto riesgo si no hay factor fuerte. El retorno al factor principal se hace de forma gradual.
+
+### Escenario 5 — Riesgo escala durante una sesión
+
+**Señales del reto:** la sesión inicia confiable, pero luego aparecen operaciones sensibles en pocos minutos: transferencia, cambio de celular y transferencia alta a cuenta nueva.
+
+**Decisión en la arquitectura:** la confianza de sesión no se toma como fija. Cada operación sensible recalcula el riesgo y puede exigir reautenticación.
+
+**Garantía buscada:** adaptar la seguridad sin invalidar toda la sesión. La sesión puede seguir activa, pero una operación crítica puede ser retenida o bloqueada.
+
+### Lectura final
+
+Esta lectura evita diseñar reglas sueltas por escenario. La misma arquitectura responde a condiciones normales y de falla porque separa responsabilidades:
+
+* riesgo calcula y explica,
+* política decide la fricción,
+* autenticación ejecuta el factor,
+* respuesta antifraude actúa cuando el riesgo supera el umbral,
+* auditoría conserva la evidencia.
+
+
 ## Cierre
 
 Los cinco escenarios se resuelven con la misma idea: riesgo y autenticación trabajan separados, pero coordinados. El riesgo explica qué está pasando; la política define qué hacer; autenticación ejecuta el factor; y auditoría deja evidencia de la decisión.
