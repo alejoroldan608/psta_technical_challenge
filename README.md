@@ -166,6 +166,7 @@ psta_technical_challenge/
 │   └── risk-decision-demo/
 │
 └── entrega/
+    └── [Estrategia tecnica PSTA - Reto Alejandro Roldan LDC.pdf](entrega/Estrategia%20tecnica%20PSTA%20-%20Reto%20Alejandro%20Roldan%20LDC.pdf)
 ```
 
 ---
