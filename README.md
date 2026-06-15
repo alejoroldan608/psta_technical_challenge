@@ -186,6 +186,7 @@ Las decisiones arquitectónicas más relevantes de la propuesta son:
 
 Esta entrega no pretende construir una solución productiva completa ni reemplazar el conocimiento especializado de fraude financiero. Las reglas, umbrales y señales de riesgo propuestas deben ser validadas con expertos del dominio de fraude, riesgo y cumplimiento.
 
+
 ## Foco de la entrga del reot
 
 1. Problema: autenticación y riesgo no conversaban.
