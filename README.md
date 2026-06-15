@@ -54,16 +54,16 @@ Los archivos fuente de los diagramas están en `diagrams/` en formato PlantUML. 
 Las imágenes exportadas en PNG se ubican en `assets/diagrams/` para facilitar la revisión desde GitHub.
 
 
-| Diagrama                                       | Archivo fuente                                                                             |
-| ---------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| C4 - Contexto                                  | [diagrams/c4-context.puml](diagrams/c4-context.puml)                                       |
-| C4 - Contenedores                              | [diagrams/c4-containers.puml](diagrams/c4-containers.puml)                                 |
-| Componentes - Dominio de riesgo                | [diagrams/components-risk-domain.puml](diagrams/components-risk-domain.puml)               |
-| Componentes - Dominio de autenticación         | [diagrams/components-auth-domain.puml](diagrams/components-auth-domain.puml)               |
-| Secuencia - Transacción de bajo riesgo         | [diagrams/sequence-low-risk-transaction.puml](diagrams/sequence-low-risk-transaction.puml) |
-| Secuencia - Indisponibilidad de Clave Dinámica | [diagrams/sequence-dynamic-key-outage.puml](diagrams/sequence-dynamic-key-outage.puml)     |
-| Secuencia - Ataque de velocidad                | [diagrams/sequence-velocity-attack.puml](diagrams/sequence-velocity-attack.puml)           |
-| Despliegue multi-zona                          | [diagrams/deployment-multizone.puml](diagrams/deployment-multizone.puml)                   |
+| Diagrama                                       | Archivo fuente                                                                             | Imagen exportada                                                                       |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------- |
+| C4 - Contexto                                  | [diagrams/c4-context.puml](diagrams/c4-context.puml)                                       | [assets/diagrams/c4-context.png](assets/diagrams/c4-context.png)                       |
+| C4 - Contenedores                              | [diagrams/c4-containers.puml](diagrams/c4-containers.puml)                                 | [assets/diagrams/c4-containers.png](assets/diagrams/c4-containers.png)                 |
+| Componentes - Dominio de riesgo                | [diagrams/components-risk-domain.puml](diagrams/components-risk-domain.puml)               | [assets/diagrams/components-risk-domain.png](assets/diagrams/components-risk-domain.png) |
+| Componentes - Dominio de autenticación         | [diagrams/components-auth-domain.puml](diagrams/components-auth-domain.puml)               | [assets/diagrams/components-auth-domain.png](assets/diagrams/components-auth-domain.png) |
+| Secuencia - Transacción de bajo riesgo         | [diagrams/sequence-low-risk-transaction.puml](diagrams/sequence-low-risk-transaction.puml) | [assets/diagrams/sequence-low-risk-transaction.png](assets/diagrams/sequence-low-risk-transaction.png) |
+| Secuencia - Indisponibilidad de Clave Dinámica | [diagrams/sequence-dynamic-key-outage.puml](diagrams/sequence-dynamic-key-outage.puml)     | [assets/diagrams/sequence-dynamic-key-outage.png](assets/diagrams/sequence-dynamic-key-outage.png) |
+| Secuencia - Ataque de velocidad                | [diagrams/sequence-velocity-attack.puml](diagrams/sequence-velocity-attack.puml)           | [assets/diagrams/sequence-velocity-attack.png](assets/diagrams/sequence-velocity-attack.png) |
+| Despliegue multi-zona                          | [diagrams/deployment-multizone.puml](diagrams/deployment-multizone.puml)                   | [assets/diagrams/deployment-multizone.png](assets/diagrams/deployment-multizone.png)   |
 
 ---
 
@@ -165,7 +165,8 @@ psta_technical_challenge/
 ├── mvp/
 │   └── risk-decision-demo/
 │
-└── entrega/
+└── entrega/Estrategia tecnica PSTA - Reto Alejandro Roldan LDC.PDF
+
 ```
 
 **Documento principal:** [Estrategia tecnica PSTA - Reto Alejandro Roldan LDC.pdf](entrega/Estrategia%20tecnica%20PSTA%20-%20Reto%20Alejandro%20Roldan%20LDC.pdf)
